@@ -1,0 +1,325 @@
+/* ── Windows 98 Window ───────────────────────────── */
+.win98-window {
+  width: 820px;
+  max-width: 95vw;
+  background: #c0c0c0;
+  border-top: 8px solid #ffffff;
+  border-left: 8px solid #ffffff;
+  border-right: 8px solid #404040;
+  border-bottom: 8px solid #404040;
+  box-shadow: 6px 6px 14px rgba(0, 0, 0, 0.5);
+  font-family: "MS Sans Serif", "Microsoft Sans Serif", Tahoma, Geneva, sans-serif;
+  font-size: 11px;
+  color: #000000;
+}
+
+/* ── Title Bar ───────────────────────────────────── */
+.win98-titlebar {
+  background: #002EAC;
+  padding: 3px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+
+.win98-titlebar-text {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 14px;
+  padding-left: 2px;
+  letter-spacing: 0.5px;
+}
+
+.win98-titlebar-controls {
+  display: none;
+}
+
+.win98-titlebar-btn {
+  width: 16px;
+  height: 14px;
+  background: #c0c0c0;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #404040;
+  border-bottom: 1px solid #404040;
+  font-size: 9px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  color: #000;
+}
+
+.win98-titlebar-btn:active {
+  border-top: 1px solid #404040;
+  border-left: 1px solid #404040;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+}
+
+.win98-close {
+  font-weight: bold;
+}
+
+/* ── Window Body ─────────────────────────────────── */
+.win98-body {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Sholom Font ─────────────────────────────────── */
+@font-face {
+  font-family: "Sholom";
+  src: url("/fonts/Sholom.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Big Header ──────────────────────────────────── */
+.win98-header {
+  text-align: center;
+  font-family: "Sholom", serif;
+  font-size: 75px;
+  font-weight: normal;
+  letter-spacing: 3px;
+  color: #002EAC;
+  margin: 4px 0 0;
+}
+
+/* ── Sections ────────────────────────────────────── */
+.win98-section {
+  width: 100%;
+}
+
+/* ── Labels ──────────────────────────────────────── */
+.win98-label {
+  font-size: 13px;
+  color: #000;
+  margin-bottom: 2px;
+}
+
+/* ── Progress Bar (Win98 style) ──────────────────── */
+.win98-progress {
+  width: 100%;
+  height: 26px;
+  background: #ffffff;
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  box-shadow: inset 1px 1px 0 #404040;
+  padding: 1px;
+}
+
+.win98-progress-fill {
+  height: 100%;
+  background: #000080;
+  transition: width 0.5s ease-out;
+}
+
+/* ── NFT Image Well (sunken) ─────────────────────── */
+.win98-image-well {
+  width: 360px;
+  height: 360px;
+  background: #ffffff;
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  box-shadow: inset 1px 1px 0 #404040;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.win98-nft-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Form ────────────────────────────────────────── */
+.win98-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.win98-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ── Input (sunken) ──────────────────────────────── */
+.win98-input {
+  width: 100%;
+  height: 34px;
+  background: #ffffff;
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  box-shadow: inset 1px 1px 0 #404040;
+  padding: 2px 8px;
+  font-family: "MS Sans Serif", "Microsoft Sans Serif", Tahoma, Geneva, sans-serif;
+  font-size: 13px;
+  color: #000;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.win98-input::placeholder {
+  color: #808080;
+}
+
+/* ── Button (raised) ─────────────────────────────── */
+.win98-btn {
+  width: 100%;
+  height: 38px;
+  background: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  box-shadow:
+    inset 1px 1px 0 #dfdfdf,
+    inset -1px -1px 0 #808080;
+  font-family: "MS Sans Serif", "Microsoft Sans Serif", Tahoma, Geneva, sans-serif;
+  font-size: 11px;
+  font-weight: normal;
+  color: #000;
+  cursor: pointer;
+  text-align: center;
+}
+
+.win98-btn:active {
+  border-top: 2px solid #404040;
+  border-left: 2px solid #404040;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  box-shadow:
+    inset 1px 1px 0 #808080,
+    inset -1px -1px 0 #dfdfdf;
+  padding-top: 1px;
+  padding-left: 1px;
+}
+
+.win98-btn:focus-visible {
+  outline: 1px dotted #000;
+  outline-offset: -4px;
+}
+
+.win98-btn:disabled {
+  color: #808080;
+  cursor: default;
+}
+
+/* ── Button Row (side by side) ──────────────────── */
+.win98-btn-row {
+  display: flex;
+  gap: 12px;
+}
+
+.win98-btn-half {
+  flex: 1;
+}
+
+/* ── Stack Layout ───────────────────────────────── */
+.win98-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+/* ── MP3 Player ─────────────────────────────────── */
+.win98-player {
+  width: 420px;
+  max-width: 95vw;
+}
+
+.win98-player-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.win98-play-btn {
+  width: 38px !important;
+  height: 38px;
+  flex-shrink: 0;
+  font-size: 16px;
+  padding: 0;
+}
+
+.win98-seek {
+  flex: 1;
+  height: 18px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: #ffffff;
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  box-shadow: inset 1px 1px 0 #404040;
+  cursor: pointer;
+}
+
+.win98-seek::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 18px;
+  background: #c0c0c0;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #404040;
+  border-bottom: 1px solid #404040;
+  cursor: pointer;
+}
+
+.win98-seek::-moz-range-thumb {
+  width: 10px;
+  height: 18px;
+  background: #c0c0c0;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #404040;
+  border-bottom: 1px solid #404040;
+  cursor: pointer;
+  border-radius: 0;
+}
+
+/* ── WL Sign-up Box ─────────────────────────────── */
+.win98-wl-box {
+  width: 820px;
+  max-width: 95vw;
+}
+
+/* ── Box Header (centered title inside body) ─────── */
+.win98-box-header {
+  text-align: center;
+  font-family: "Sholom", serif;
+  font-size: 28px;
+  font-weight: normal;
+  color: #002EAC;
+  margin: 0 0 12px;
+}
+
+/* ── About Text ──────────────────────────────────── */
+.win98-about-text {
+  font-size: 13px;
+  color: #000;
+  text-align: center;
+  line-height: 1.5;
+  margin: 0;
+}
