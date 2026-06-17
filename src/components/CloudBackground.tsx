@@ -55,6 +55,11 @@ const fragmentShader = `
       uv.x = (uv.x - 0.5) / scale + 0.5;
     }
 
+    // Pixelation filter — snap UVs to a coarse grid for a blocky retro look
+    float pixelCols = 400.0; // pixels across the screen
+    vec2 pixelGrid = vec2(pixelCols, pixelCols / uVideoAspect);
+    uv = (floor(uv * pixelGrid) + 0.5) / pixelGrid;
+
     vec4 videoColor = texture2D(uVideoTexture, uv);
 
     // Subtle color grading — cool blue/purple shift
@@ -65,26 +70,26 @@ const fragmentShader = `
     // Slight contrast boost
     videoColor.rgb = (videoColor.rgb - 0.5) * 1.12 + 0.5;
 
-    // Very subtle desaturation
+    // Heavy saturation boost
     float luma = dot(videoColor.rgb, vec3(0.299, 0.587, 0.114));
-    videoColor.rgb = mix(vec3(luma), videoColor.rgb, 0.88);
+    videoColor.rgb = mix(vec3(luma), videoColor.rgb, 10.2);
 
     // Reactivity: hexes appear based on brightness/color in the video
     float brightness = dot(videoColor.rgb, vec3(0.299, 0.587, 0.114));
     // Trigger on bright areas (clouds catching light)
-    float trigger = smoothstep(0.45, 0.7, brightness);
+    float trigger = smoothstep(0.7, 0.92, brightness);
 
     // Holographic hexagonal grid overlay
-    float hexScale = 146.0;
+    float hexScale = 120.0;
     vec4 hex = hexGrid(vUv, hexScale);
     float edge = smoothstep(0.0, 0.04, hex.z);
 
     // Rainbow hologram color shift based on position and time
     float holo = vUv.x * 3.0 + vUv.y * 2.0 + uTime * 0.4;
     vec3 holoColor = vec3(
-      0.5 + 0.5 * sin(holo),
-      0.5 + 0.5 * sin(holo + 2.094),
-      0.5 + 0.5 * sin(holo + 4.189)
+      10.5 + 0.5 * sin(holo),
+      10.5 + 0.5 * sin(holo + 2.094),
+      10.5 + 0.5 * sin(holo + 4.189)
     );
 
     // Glowing holographic hex edges — only where triggered
@@ -99,23 +104,6 @@ const fragmentShader = `
     // Iridescent inner fill — only where triggered
     float innerGlow = smoothstep(0.3, 0.1, hex.z);
     videoColor.rgb += holoColor * innerGlow * 0.015 * trigger;
-
-    // Subtle film grain / noise
-    float grain = hash(vUv * uResolution + uTime * 100.0) * 0.06 - 0.03;
-    videoColor.rgb += grain;
-
-    // Subtle scanlines (barely visible, like a screen texture)
-    float scanline = sin(vUv.y * uResolution.y * 1.0) * 0.02;
-    videoColor.rgb -= scanline;
-
-    // Subtle vignette
-    vec2 vigUv = vUv * (1.0 - vUv);
-    float vig = vigUv.x * vigUv.y * 16.0;
-    vig = pow(vig, 0.25);
-    videoColor.rgb *= vig;
-
-    // Slight overall darkening for moody atmosphere
-    videoColor.rgb *= 0.92;
 
     gl_FragColor = videoColor;
   }

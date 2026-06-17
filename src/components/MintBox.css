@@ -240,6 +240,62 @@
   gap: 28px;
 }
 
+/* ── WL Spots Count ─────────────────────────────── */
+.win98-wl-count {
+  display: block;
+  text-align: center;
+  font-size: 22px;
+  color: #000;
+}
+
+/* ── Single Main Window ─────────────────────────── */
+.win98-main {
+  width: 940px;
+  max-width: 95vw;
+}
+
+/* ── Two-Column Layout ──────────────────────────── */
+.win98-columns {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  width: 100%;
+}
+
+.win98-col-left {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.win98-col-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Keep the image well a fixed square so the image stays contained */
+.win98-col-left .win98-image-well {
+  width: 360px;
+  height: 360px;
+  flex-shrink: 0;
+}
+
+/* ── Player Wrapper (below WL form, right column) ─ */
+.win98-player-wrap {
+  width: 70%;
+  margin-top: 16px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Centered About Wrapper ─────────────────────── */
+.win98-about-wrap {
+  text-align: center;
+}
+
 /* ── MP3 Player ─────────────────────────────────── */
 .win98-player {
   width: 420px;

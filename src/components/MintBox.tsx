@@ -5,7 +5,6 @@ import { db } from "@/lib/firebase";
 import { collection, addDoc, getCountFromServer, serverTimestamp, query, where, getDocs } from "firebase/firestore";
 import "./MintBox.css";
 
-const TOTAL_SUPPLY = 2222;
 const WL_SUPPLY = 1111;
 const CYCLE_SPEED = 120; // ms between frames
 const WL_COLLECTION = "whitelist";
@@ -20,10 +19,6 @@ export default function MintBox() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const [totalMinted] = useState(0);
-  const mintProgress = (totalMinted / TOTAL_SUPPLY) * 100;
-  const wlProgress = (minted / WL_SUPPLY) * 100;
 
   // Fetch WL count from Firestore
   useEffect(() => {
@@ -153,140 +148,109 @@ export default function MintBox() {
 
   return (
     <div className="win98-stack">
-      {/* Main Window — no title bar */}
-      <div className="win98-window">
+      {/* Single Window — everything inside */}
+      <div className="win98-window win98-main">
         <div className="win98-body">
-          {/* Big centered header */}
+          {/* Title */}
           <h1 className="win98-header">MOSSADIO</h1>
 
-          {/* Total Minted Progress Bar */}
+          {/* WL Spots count under title */}
           <div className="win98-section">
-            <span className="win98-label" style={{ textAlign: "center", display: "block" }}>
-              {totalMinted}/{TOTAL_SUPPLY} Minted
-            </span>
-            <div className="win98-progress">
-              <div
-                className="win98-progress-fill"
-                style={{ width: `${Math.max(mintProgress, 1)}%` }}
-              />
-            </div>
-          </div>
-
-          {/* NFT Preview */}
-          <div className="win98-section" style={{ display: "flex", justifyContent: "center" }}>
-            <div className="win98-image-well">
-              {images.length > 0 ? (
-                <img
-                  src={images[frameIndex]}
-                  alt="NFT Preview"
-                  className="win98-nft-img"
-                />
-              ) : (
-                <span style={{ color: "#808080", fontSize: "11px" }}>NFT Preview</span>
-              )}
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="win98-section win98-btn-row">
-            <button className="win98-btn win98-btn-half">Join Whitelist</button>
-            <button className="win98-btn win98-btn-half">Mint Now</button>
-          </div>
-        </div>
-      </div>
-
-      {/* MP3 Player */}
-      <div className="win98-window win98-player">
-        <div className="win98-body" style={{ padding: "12px 20px" }}>
-          <audio
-            ref={audioRef}
-            src="/audio/Mossadio.mp3"
-            onTimeUpdate={handleTimeUpdate}
-            onLoadedMetadata={handleLoadedMetadata}
-            onEnded={() => setPlaying(false)}
-          />
-          <div className="win98-player-row">
-            <button className="win98-btn win98-play-btn" onClick={togglePlay}>
-              {playing ? "⏸" : "▶"}
-            </button>
-            <input
-              type="range"
-              min={0}
-              max={duration || 0}
-              value={currentTime}
-              onChange={handleSeek}
-              className="win98-seek"
-            />
-            <span className="win98-label" style={{ whiteSpace: "nowrap" }}>
-              {formatTime(currentTime)} / {formatTime(duration)}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* WL Sign-up Window */}
-      <div className="win98-window win98-wl-box">
-        <div className="win98-body">
-          <h2 className="win98-box-header">Join Whitelist</h2>
-
-          {/* WL Progress Bar */}
-          <div className="win98-section" style={{ marginBottom: "12px" }}>
-            <span className="win98-label" style={{ textAlign: "center", display: "block" }}>
+            <span className="win98-wl-count">
               {minted}/{WL_SUPPLY} Whitelist Spots
             </span>
-            <div className="win98-progress">
-              <div
-                className="win98-progress-fill"
-                style={{ width: `${Math.max(wlProgress, 1)}%` }}
-              />
+          </div>
+
+          {/* Two columns: preview left, registry right */}
+          <div className="win98-columns">
+            {/* Left: NFT Preview */}
+            <div className="win98-col win98-col-left">
+              <div className="win98-image-well">
+                {images.length > 0 ? (
+                  <img
+                    src={images[frameIndex]}
+                    alt="NFT Preview"
+                    className="win98-nft-img"
+                  />
+                ) : (
+                  <span style={{ color: "#808080", fontSize: "11px" }}>NFT Preview</span>
+                )}
+              </div>
+            </div>
+
+            {/* Right: WL Registry */}
+            <div className="win98-col win98-col-right">
+              <h2 className="win98-box-header">Join Whitelist</h2>
+              <form onSubmit={handleSubmit} className="win98-form">
+                <div className="win98-field">
+                  <label className="win98-label">Twitter:</label>
+                  <input
+                    type="text"
+                    placeholder="@handle"
+                    value={twitter}
+                    onChange={(e) => setTwitter(e.target.value)}
+                    className="win98-input"
+                    disabled={submitting || submitted}
+                  />
+                </div>
+
+                <div className="win98-field">
+                  <label className="win98-label">Solana Address:</label>
+                  <input
+                    type="text"
+                    placeholder="Wallet address"
+                    value={solana}
+                    onChange={(e) => setSolana(e.target.value)}
+                    className="win98-input"
+                    disabled={submitting || submitted}
+                  />
+                </div>
+
+                {error && (
+                  <span className="win98-label" style={{ color: "red", textAlign: "center", display: "block" }}>
+                    {error}
+                  </span>
+                )}
+
+                <button type="submit" className="win98-btn" disabled={submitting || submitted}>
+                  {submitted ? "Submitted ✓" : submitting ? "Submitting..." : "Submit"}
+                </button>
+              </form>
+
+              {/* Song — right below WL form */}
+              <div className="win98-player-wrap">
+                <audio
+                  ref={audioRef}
+                  src="/audio/Mossadio.mp3"
+                  onTimeUpdate={handleTimeUpdate}
+                  onLoadedMetadata={handleLoadedMetadata}
+                  onEnded={() => setPlaying(false)}
+                />
+                <div className="win98-player-row">
+                  <button className="win98-btn win98-play-btn" onClick={togglePlay}>
+                    {playing ? "⏸" : "▶"}
+                  </button>
+                  <input
+                    type="range"
+                    min={0}
+                    max={duration || 0}
+                    value={currentTime}
+                    onChange={handleSeek}
+                    className="win98-seek"
+                  />
+                  <span className="win98-label" style={{ whiteSpace: "nowrap" }}>
+                    {formatTime(currentTime)} / {formatTime(duration)}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="win98-form">
-            <div className="win98-field">
-              <label className="win98-label">Twitter:</label>
-              <input
-                type="text"
-                placeholder="@handle"
-                value={twitter}
-                onChange={(e) => setTwitter(e.target.value)}
-                className="win98-input"
-                disabled={submitting || submitted}
-              />
-            </div>
-
-            <div className="win98-field">
-              <label className="win98-label">Solana Address:</label>
-              <input
-                type="text"
-                placeholder="Wallet address"
-                value={solana}
-                onChange={(e) => setSolana(e.target.value)}
-                className="win98-input"
-                disabled={submitting || submitted}
-              />
-            </div>
-
-            {error && (
-              <span className="win98-label" style={{ color: "red", textAlign: "center", display: "block" }}>
-                {error}
-              </span>
-            )}
-
-            <button type="submit" className="win98-btn" disabled={submitting || submitted}>
-              {submitted ? "Submitted ✓" : submitting ? "Submitting..." : "Submit"}
-            </button>
-          </form>
-        </div>
-      </div>
-
-      {/* About Window */}
-      <div className="win98-window win98-wl-box">
-        <div className="win98-body">
-          <h2 className="win98-box-header">About</h2>
-          <p className="win98-about-text">
-            coming soon, sholom.
-          </p>
+          {/* About bottom centered */}
+          <div className="win98-section win98-about-wrap">
+            <h2 className="win98-box-header">About</h2>
+            <p className="win98-about-text">coming soon, sholom.</p>
+          </div>
         </div>
       </div>
     </div>
