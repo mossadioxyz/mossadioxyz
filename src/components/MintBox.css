@@ -13,57 +13,6 @@
   color: #000000;
 }
 
-/* ── Title Bar ───────────────────────────────────── */
-.win98-titlebar {
-  background: #002EAC;
-  padding: 3px 4px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  user-select: none;
-}
-
-.win98-titlebar-text {
-  color: #ffffff;
-  font-weight: bold;
-  font-size: 14px;
-  padding-left: 2px;
-  letter-spacing: 0.5px;
-}
-
-.win98-titlebar-controls {
-  display: none;
-}
-
-.win98-titlebar-btn {
-  width: 16px;
-  height: 14px;
-  background: #c0c0c0;
-  border-top: 1px solid #ffffff;
-  border-left: 1px solid #ffffff;
-  border-right: 1px solid #404040;
-  border-bottom: 1px solid #404040;
-  font-size: 9px;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
-  color: #000;
-}
-
-.win98-titlebar-btn:active {
-  border-top: 1px solid #404040;
-  border-left: 1px solid #404040;
-  border-right: 1px solid #ffffff;
-  border-bottom: 1px solid #ffffff;
-}
-
-.win98-close {
-  font-weight: bold;
-}
-
 /* ── Window Body ─────────────────────────────────── */
 .win98-body {
   padding: 32px;
@@ -85,7 +34,7 @@
 .win98-header {
   text-align: center;
   font-family: "Sholom", serif;
-  font-size: 75px;
+  font-size: clamp(40px, 9vw, 75px);
   font-weight: normal;
   letter-spacing: 3px;
   color: #002EAC;
@@ -222,16 +171,6 @@
   cursor: default;
 }
 
-/* ── Button Row (side by side) ──────────────────── */
-.win98-btn-row {
-  display: flex;
-  gap: 12px;
-}
-
-.win98-btn-half {
-  flex: 1;
-}
-
 /* ── Stack Layout ───────────────────────────────── */
 .win98-stack {
   display: flex;
@@ -240,11 +179,15 @@
   gap: 28px;
 }
 
-/* ── WL Spots Count ─────────────────────────────── */
+/* ── Counts Row (WL left, Minted right) ─────────── */
+.win98-count-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .win98-wl-count {
-  display: block;
-  text-align: center;
-  font-size: 22px;
+  font-size: clamp(12px, 3vw, 22px);
   color: #000;
 }
 
@@ -280,6 +223,7 @@
 .win98-col-left .win98-image-well {
   width: 360px;
   height: 360px;
+  max-width: 100%;
   flex-shrink: 0;
 }
 
@@ -297,11 +241,6 @@
 }
 
 /* ── MP3 Player ─────────────────────────────────── */
-.win98-player {
-  width: 420px;
-  max-width: 95vw;
-}
-
 .win98-player-row {
   display: flex;
   align-items: center;
@@ -355,12 +294,6 @@
   border-radius: 0;
 }
 
-/* ── WL Sign-up Box ─────────────────────────────── */
-.win98-wl-box {
-  width: 820px;
-  max-width: 95vw;
-}
-
 /* ── Box Header (centered title inside body) ─────── */
 .win98-box-header {
   text-align: center;
@@ -378,4 +311,61 @@
   text-align: center;
   line-height: 1.5;
   margin: 0;
+}
+
+/* ── Responsive: tablet & mobile ─────────────────── */
+@media (max-width: 768px) {
+  .win98-body {
+    padding: 20px;
+    gap: 16px;
+  }
+
+  /* Stack the two columns vertically */
+  .win98-columns {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .win98-col-left,
+  .win98-col-right {
+    width: 100%;
+  }
+
+  /* Image well becomes a responsive square */
+  .win98-col-left .win98-image-well {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  /* Player spans full width when stacked */
+  .win98-player-wrap {
+    width: 100%;
+  }
+
+  .win98-box-header {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 420px) {
+  .win98-window {
+    border-width: 5px;
+  }
+
+  .win98-body {
+    padding: 14px;
+  }
+
+  /* Stack the counts on very small screens */
+  .win98-count-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .win98-player-row {
+    gap: 6px;
+  }
 }

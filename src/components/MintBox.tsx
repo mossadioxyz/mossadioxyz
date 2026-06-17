@@ -6,6 +6,7 @@ import { collection, addDoc, getCountFromServer, serverTimestamp, query, where, 
 import "./MintBox.css";
 
 const WL_SUPPLY = 1111;
+const TOTAL_SUPPLY = 2222;
 const CYCLE_SPEED = 120; // ms between frames
 const WL_COLLECTION = "whitelist";
 
@@ -154,10 +155,13 @@ export default function MintBox() {
           {/* Title */}
           <h1 className="win98-header">MOSSADIO</h1>
 
-          {/* WL Spots count under title */}
-          <div className="win98-section">
+          {/* Counts row under title — WL left, Minted right */}
+          <div className="win98-section win98-count-row">
             <span className="win98-wl-count">
               {minted}/{WL_SUPPLY} Whitelist Spots
+            </span>
+            <span className="win98-wl-count">
+              0/{TOTAL_SUPPLY} Minted
             </span>
           </div>
 
@@ -221,7 +225,7 @@ export default function MintBox() {
               <div className="win98-player-wrap">
                 <audio
                   ref={audioRef}
-                  src="/audio/Mossadio.mp3"
+                  src="/audio/hava-nagila.mp3"
                   onTimeUpdate={handleTimeUpdate}
                   onLoadedMetadata={handleLoadedMetadata}
                   onEnded={() => setPlaying(false)}
@@ -246,10 +250,15 @@ export default function MintBox() {
             </div>
           </div>
 
-          {/* About bottom centered */}
+          {/* Details bottom centered */}
           <div className="win98-section win98-about-wrap">
-            <h2 className="win98-box-header">About</h2>
-            <p className="win98-about-text">coming soon, sholom.</p>
+            <h2 className="win98-box-header">Details</h2>
+            <p className="win98-about-text">
+              Supply: 2,222<br />
+              Chain: Solana<br />
+              Price: TBA<br />
+              Date: TBA
+            </p>
           </div>
         </div>
       </div>
