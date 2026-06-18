@@ -109,43 +109,6 @@ export default function MintBox() {
     }
   };
 
-  // MP3 Player state
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [playing, setPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-
-  const togglePlay = () => {
-    if (!audioRef.current) return;
-    if (playing) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
-    }
-    setPlaying(!playing);
-  };
-
-  const handleTimeUpdate = () => {
-    if (audioRef.current) setCurrentTime(audioRef.current.currentTime);
-  };
-
-  const handleLoadedMetadata = () => {
-    if (audioRef.current) setDuration(audioRef.current.duration);
-  };
-
-  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const time = Number(e.target.value);
-    if (audioRef.current) {
-      audioRef.current.currentTime = time;
-      setCurrentTime(time);
-    }
-  };
-
-  const formatTime = (t: number) => {
-    const m = Math.floor(t / 60);
-    const s = Math.floor(t % 60);
-    return `${m}:${s.toString().padStart(2, "0")}`;
-  };
 
   return (
     <div className="win98-stack">
@@ -158,7 +121,7 @@ export default function MintBox() {
           {/* Counts row under title — WL left, Minted right */}
           <div className="win98-section win98-count-row">
             <span className="win98-wl-count">
-              {minted}/{WL_SUPPLY} Whitelist Spots
+              {minted}/{WL_SUPPLY} Whitelisted
             </span>
             <span className="win98-wl-count">
               0/{TOTAL_SUPPLY} Minted
@@ -224,28 +187,10 @@ export default function MintBox() {
               {/* Song — right below WL form */}
               <div className="win98-player-wrap">
                 <audio
-                  ref={audioRef}
                   src="/audio/hava-nagila.mp3"
-                  onTimeUpdate={handleTimeUpdate}
-                  onLoadedMetadata={handleLoadedMetadata}
-                  onEnded={() => setPlaying(false)}
+                  controls
+                  className="win98-native-audio"
                 />
-                <div className="win98-player-row">
-                  <button className="win98-btn win98-play-btn" onClick={togglePlay}>
-                    {playing ? "⏸" : "▶"}
-                  </button>
-                  <input
-                    type="range"
-                    min={0}
-                    max={duration || 0}
-                    value={currentTime}
-                    onChange={handleSeek}
-                    className="win98-seek"
-                  />
-                  <span className="win98-label" style={{ whiteSpace: "nowrap" }}>
-                    {formatTime(currentTime)} / {formatTime(duration)}
-                  </span>
-                </div>
               </div>
             </div>
           </div>
