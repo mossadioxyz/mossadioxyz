@@ -253,6 +253,28 @@
   text-align: center;
 }
 
+/* ── Social Buttons ─────────────────────────────── */
+.win98-socials {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  margin-top: 16px;
+}
+
+.win98-social-btn {
+  width: 40px !important;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.win98-social-btn svg {
+  display: block;
+}
+
 /* ── MP3 Player ─────────────────────────────────── */
 .win98-player-row {
   display: flex;
