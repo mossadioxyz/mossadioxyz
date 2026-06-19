@@ -6,6 +6,7 @@ import { collection, addDoc, getCountFromServer, serverTimestamp, query, where, 
 import "./MintBox.css";
 
 const WL_SUPPLY = 1111;
+const FREE_MINT_SUPPLY = 111;
 const TOTAL_SUPPLY = 2222;
 const CYCLE_SPEED = 120; // ms between frames
 const WL_COLLECTION = "whitelist";
@@ -118,8 +119,11 @@ export default function MintBox() {
           {/* Title */}
           <h1 className="win98-header">MOSSADIO</h1>
 
-          {/* Counts row under title — WL left, Minted right */}
+          {/* Counts row under title — Free Mint, Whitelisted, Minted */}
           <div className="win98-section win98-count-row">
+            <span className="win98-wl-count">
+              {Math.min(minted, FREE_MINT_SUPPLY)}/{FREE_MINT_SUPPLY} Free Mint
+            </span>
             <span className="win98-wl-count">
               {minted}/{WL_SUPPLY} Whitelisted
             </span>
@@ -147,7 +151,13 @@ export default function MintBox() {
 
             {/* Right: WL Registry */}
             <div className="win98-col win98-col-right">
-              <h2 className="win98-box-header">Join Whitelist</h2>
+              <h2 className="win98-box-header">Join the Whitelist</h2>
+              <p className="win98-wl-note">
+                Be one of the first 111 on the whitelist and score a free mint alongside your WL spot!
+              </p>
+              <p className="win98-wl-note win98-wl-warn">
+                We will review twitter accounts to prevent botting. Ty.&lt;3
+              </p>
               <form onSubmit={handleSubmit} className="win98-form">
                 <div className="win98-field">
                   <label className="win98-label">Twitter:</label>
@@ -174,7 +184,7 @@ export default function MintBox() {
                 </div>
 
                 {error && (
-                  <span className="win98-label" style={{ color: "red", textAlign: "center", display: "block" }}>
+                  <span className="win98-label" style={{ color: "#ff6b6b", textAlign: "center", display: "block" }}>
                     {error}
                   </span>
                 )}
@@ -208,6 +218,15 @@ export default function MintBox() {
             {/* Social buttons */}
             <div className="win98-socials">
               <a
+                href="https://launchmynft.io/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="win98-btn win98-social-btn"
+                aria-label="LaunchMyNFT"
+              >
+                <img src="/images/launchmynft.png" alt="" className="win98-social-img" />
+              </a>
+              <a
                 href="https://x.com/mossadio"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -239,6 +258,16 @@ export default function MintBox() {
                 </svg>
               </a>
             </div>
+            <p className="win98-social-note">
+              Help us work for ur Shekels by following us on twitter!&lt;3
+            </p>
+            <p className="win98-disclaimer">
+              The team will remain anonymous for obvious reasons (the whole Jew thing).
+              This is a degen mint with no promises, roadmap, or whitepaper - solely
+              for meme and art purposes. Always use a burner wallet. Twitter names from the
+              WL are only for verification and to prevent botting during mint; addresses and
+              Twitter names will never be made public.
+            </p>
           </div>
         </div>
       </div>

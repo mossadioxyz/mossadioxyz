@@ -13,7 +13,9 @@ const vertexShader = `
 `;
 
 const fragmentShader = `
-  uniform sampler2D uVideoTexture;
+  uniform sampler2D uVideoPrimary;
+  uniform sampler2D uVideoSecondary;
+  uniform float uMix;
   uniform float uTime;
   uniform vec2 uResolution;
   uniform float uVideoAspect;
@@ -60,7 +62,11 @@ const fragmentShader = `
     vec2 pixelGrid = vec2(pixelCols, pixelCols / uVideoAspect);
     uv = (floor(uv * pixelGrid) + 0.5) / pixelGrid;
 
-    vec4 videoColor = texture2D(uVideoTexture, uv);
+    vec4 videoColor = mix(
+      texture2D(uVideoPrimary, uv),
+      texture2D(uVideoSecondary, uv),
+      uMix
+    );
 
     // Subtle color grading — cool blue/purple shift
     videoColor.r *= 0.85;
@@ -132,24 +138,44 @@ export default function CloudBackground() {
     container.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // Create video element
-    const video = document.createElement("video");
-    video.src = "/videos/clouds.mp4";
-    video.crossOrigin = "anonymous";
-    video.loop = true;
-    video.muted = true;
-    video.playsInline = true;
-    video.autoplay = true;
-    video.preload = "auto";
+    // Two video elements for a seamless crossfade loop (no visible cut)
+    const FADE_DURATION = 1.2; // seconds of crossfade at the loop point
 
-    const videoTexture = new THREE.VideoTexture(video);
-    videoTexture.minFilter = THREE.LinearFilter;
-    videoTexture.magFilter = THREE.LinearFilter;
-    videoTexture.format = THREE.RGBAFormat;
-    videoTexture.colorSpace = THREE.SRGBColorSpace;
+    const makeVideo = () => {
+      const v = document.createElement("video");
+      v.src = "/videos/clouds.mp4";
+      v.crossOrigin = "anonymous";
+      v.loop = false; // looping is managed manually so we can crossfade
+      v.muted = true;
+      v.playsInline = true;
+      v.preload = "auto";
+      return v;
+    };
+
+    const videoA = makeVideo();
+    const videoB = makeVideo();
+
+    const makeTexture = (v: HTMLVideoElement) => {
+      const t = new THREE.VideoTexture(v);
+      t.minFilter = THREE.LinearFilter;
+      t.magFilter = THREE.LinearFilter;
+      t.format = THREE.RGBAFormat;
+      t.colorSpace = THREE.SRGBColorSpace;
+      return t;
+    };
+
+    const textureA = makeTexture(videoA);
+    const textureB = makeTexture(videoB);
+
+    // Roles: primary is showing; secondary fades in as primary nears its end
+    let primaryVideo = videoA;
+    let secondaryVideo = videoB;
+    let videoDuration = 0;
 
     const uniforms = {
-      uVideoTexture: { value: videoTexture },
+      uVideoPrimary: { value: textureA },
+      uVideoSecondary: { value: textureB },
+      uMix: { value: 0 },
       uTime: { value: 0 },
       uResolution: {
         value: new THREE.Vector2(window.innerWidth, window.innerHeight),
@@ -170,17 +196,18 @@ export default function CloudBackground() {
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
-    // Update video aspect once metadata loads
-    video.addEventListener("loadedmetadata", () => {
-      uniforms.uVideoAspect.value = video.videoWidth / video.videoHeight;
+    // Update video aspect & duration once metadata loads
+    videoA.addEventListener("loadedmetadata", () => {
+      uniforms.uVideoAspect.value = videoA.videoWidth / videoA.videoHeight;
+      videoDuration = videoA.duration;
     });
 
-    // Start playback
+    // Start playback of the primary clip
     const playVideo = () => {
-      video.play().catch(() => {
+      primaryVideo.play().catch(() => {
         // Retry on user interaction
         const handleInteraction = () => {
-          video.play();
+          primaryVideo.play();
           document.removeEventListener("click", handleInteraction);
           document.removeEventListener("touchstart", handleInteraction);
         };
@@ -202,7 +229,43 @@ export default function CloudBackground() {
     const animate = () => {
       animFrameRef.current = requestAnimationFrame(animate);
       uniforms.uTime.value = clock.getElapsedTime();
-      videoTexture.needsUpdate = true;
+
+      // Seamless crossfade loop — fade the incoming clip in before the
+      // current one ends, then swap roles so there is never a hard cut.
+      if (videoDuration > 0) {
+        const t = primaryVideo.currentTime;
+        const fadeStart = videoDuration - FADE_DURATION;
+
+        if (t >= fadeStart) {
+          if (secondaryVideo.paused) {
+            secondaryVideo.currentTime = 0;
+            secondaryVideo.play().catch(() => {});
+          }
+          uniforms.uMix.value = Math.min((t - fadeStart) / FADE_DURATION, 2);
+        } else {
+          uniforms.uMix.value = 0;
+        }
+
+        // Once the primary clip finishes the fade, swap primary/secondary
+        if (primaryVideo.ended || t >= videoDuration - 0.05) {
+          const finishedVideo = primaryVideo;
+          const primaryTex = uniforms.uVideoPrimary.value;
+
+          primaryVideo = secondaryVideo;
+          secondaryVideo = finishedVideo;
+
+          uniforms.uVideoPrimary.value = uniforms.uVideoSecondary.value;
+          uniforms.uVideoSecondary.value = primaryTex;
+          uniforms.uMix.value = 0;
+
+          // Reset the finished clip so it's ready for the next crossfade
+          finishedVideo.pause();
+          finishedVideo.currentTime = 0;
+        }
+      }
+
+      textureA.needsUpdate = true;
+      textureB.needsUpdate = true;
       renderer.render(scene, camera);
     };
     animate();
@@ -210,12 +273,15 @@ export default function CloudBackground() {
     return () => {
       cancelAnimationFrame(animFrameRef.current);
       window.removeEventListener("resize", onResize);
-      video.pause();
-      video.src = "";
+      videoA.pause();
+      videoB.pause();
+      videoA.src = "";
+      videoB.src = "";
       renderer.dispose();
       material.dispose();
       geometry.dispose();
-      videoTexture.dispose();
+      textureA.dispose();
+      textureB.dispose();
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
