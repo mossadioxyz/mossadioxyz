@@ -266,6 +266,24 @@
   text-align: center;
 }
 
+.win98-detail-link {
+  color: #8fb6ff;
+  font-style: italic;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.win98-detail-link:hover {
+  color: #b9d2ff;
+}
+
+.win98-ca {
+  font-size: 13px;
+  font-style: italic;
+  text-align: center;
+  margin: 8px 0 0;
+}
+
 /* ── Social Buttons ─────────────────────────────── */
 .win98-socials {
   display: flex;

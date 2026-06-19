@@ -209,6 +209,16 @@ export default function MintBox() {
           <div className="win98-section win98-about-wrap">
             <h2 className="win98-box-header">Details</h2>
             <p className="win98-about-text">
+              Launchpad:{" "}
+              <a
+                href="https://launchmynft.io/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="win98-detail-link"
+              >
+                Launchmynft.io
+              </a>
+              <br />
               Supply: 2,222<br />
               Chain: Solana<br />
               Price: TBA<br />
@@ -266,7 +276,21 @@ export default function MintBox() {
               This is a degen mint with no promises, roadmap, or whitepaper - solely
               for meme and art purposes. Always use a burner wallet. Twitter names from the
               WL are only for verification and to prevent botting during mint; addresses and
-              Twitter names will never be made public.
+              Twitter names will never be made public. If you're easily offended, chances are
+              this collection isn't for you - and that's okay. If you decide to mint, there's a
+              ton of slurs and potentially hateful content and symbolism. We also take pride in
+              knowing that this is a Remilio deriv on Solana, and give huge love to the Remilia
+              ecosystem. Happy minting!&lt;3
+            </p>
+            <p className="win98-ca">
+              <a
+                href="https://solscan.io/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="win98-detail-link"
+              >
+                Contract Address: TBA
+              </a>
             </p>
           </div>
         </div>
